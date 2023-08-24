@@ -1,0 +1,114 @@
+```{r}
+write_sf(HarrowUnitSub2010, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2010.shp")
+
+write_sf(HarrowUnitSub2011, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2011.shp")
+
+write_sf(HarrowUnitSub2012, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2012.shp")
+
+write_sf(HarrowUnitSub2013, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2013.shp")
+
+write_sf(HarrowUnitSub2014, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2014.shp")
+
+write_sf(HarrowUnitSub2015, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2015.shp")
+
+write_sf(HarrowUnitSub2016, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2016.shp")
+
+write_sf(HarrowUnitSub2017, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2017.shp")
+
+write_sf(HarrowUnitSub2018, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2018.shp")
+
+write_sf(HarrowUnitSub2019, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2019.shp")
+
+write_sf(HarrowUnitSub2020, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2020.shp")
+
+write_sf(HarrowUnitSub2021, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2021.shp")
+
+write_sf(HarrowUnitSub2022, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2022.shp")
+
+write_sf(HarrowUnitSub2023, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HarrowSub2023.shp")
+
+write_sf(BexleyUnitSub2010, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2010.shp")
+
+write_sf(BexleyUnitSub2011, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2011.shp")
+
+write_sf(BexleyUnitSub2012, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2012.shp")
+
+write_sf(BexleyUnitSub2013, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2013.shp")
+
+write_sf(BexleyUnitSub2014, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2014.shp")
+
+write_sf(BexleyUnitSub2015, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2015.shp")
+
+write_sf(BexleyUnitSub2016, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2016.shp")
+
+write_sf(BexleyUnitSub2017, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2017.shp")
+
+write_sf(BexleyUnitSub2018, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2018.shp")
+
+write_sf(BexleyUnitSub2019, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2019.shp")
+
+write_sf(BexleyUnitSub2020, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2020.shp")
+
+write_sf(BexleyUnitSub2021, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2021.shp")
+
+write_sf(BexleyUnitSub2022, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2022.shp")
+
+write_sf(BexleyUnitSub2023, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/BexleySub2023.shp")
+
+write_sf(HounslowUnitSub2010, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2010.shp")
+
+write_sf(HounslowUnitSub2011, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2011.shp")
+
+write_sf(HounslowUnitSub2012, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2012.shp")
+
+write_sf(HounslowUnitSub2013, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2013.shp")
+
+write_sf(HounslowUnitSub2014, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2014.shp")
+
+write_sf(HounslowUnitSub2015, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2015.shp")
+
+write_sf(HounslowUnitSub2016, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2016.shp")
+
+write_sf(HounslowUnitSub2017, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2017.shp")
+
+write_sf(HounslowUnitSub2018, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2018.shp")
+
+write_sf(HounslowUnitSub2019, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2019.shp")
+
+write_sf(HounslowUnitSub2020, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2020.shp")
+
+write_sf(HounslowUnitSub2021, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2021.shp")
+
+write_sf(HounslowUnitSub2022, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2022.shp")
+
+write_sf(HounslowUnitSub2023, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/HounslowSub2023.shp")
+
+write_sf(GreenwichUnitSub2010, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2010.shp")
+
+write_sf(GreenwichUnitSub2011, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2011.shp")
+
+write_sf(GreenwichUnitSub2012, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2012.shp")
+
+write_sf(GreenwichUnitSub2013, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2013.shp")
+
+write_sf(GreenwichUnitSub2014, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2014.shp")
+
+write_sf(GreenwichUnitSub2015, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2015.shp")
+
+write_sf(GreenwichUnitSub2016, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2016.shp")
+
+write_sf(GreenwichUnitSub2017, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2017.shp")
+
+write_sf(GreenwichUnitSub2018, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2018.shp")
+
+write_sf(GreenwichUnitSub2019, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2019.shp")
+
+write_sf(GreenwichUnitSub2020, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2020.shp")
+
+write_sf(GreenwichUnitSub2021, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2021.shp")
+
+write_sf(GreenwichUnitSub2022, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2022.shp")
+
+write_sf(GreenwichUnitSub2023, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub_year/GreenwichSub2023.shp")
+```
+

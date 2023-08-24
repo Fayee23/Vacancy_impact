@@ -1,0 +1,37 @@
+```{r}
+library(tidyverse)
+library(sf)
+library(tmap)
+library(janitor)
+library(spatstat)
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+library(plm)
+```
+
+```{r}
+camera <- read_csv("data/footfall/Camera_coords.csv") %>%
+  st_as_sf(., coords = c("longitude", "latitude"), crs = 4326)%>%
+  st_transform(.,27700)
+```
+
+```{r}
+cameraGreenwich <- camera%>%
+  filter(ward == "Greenwich")
+```
+
+
+```{r}
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(GreenwichHS) +
+  tm_polygons(col = "blue", alpha = 0.5) +
+tm_shape(cameraGreenwich) +
+  tm_dots(size = 0.2, col = "red")
+```
+

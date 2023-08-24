@@ -1,0 +1,149 @@
+---
+title: "Data processing"
+output: html_notebook
+---
+
+```{r}
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+```
+
+## Reading data
+
+### Read london borough
+```{r}
+Londonborough <- st_read(here::here("data", 
+                                        "statistical-gis-boundaries-london", 
+                                        "ESRI",
+                                        "London_Borough_Excluding_MHW.shp"))%>%
+  st_transform(.,27700)
+```
+
+```{r}
+#have a look on the map
+qtm(Londonborough)
+```
+
+
+```{r}
+#extract the borough Harrow
+
+# select by attribute
+Harrow <- Londonborough %>%
+  filter(., NAME=="Harrow")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+```{r}
+#extract the borough Hounslow
+
+# select by attribute
+Hounslow <- Londonborough %>%
+  filter(., NAME=="Hounslow")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Hounslow) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+```{r}
+#extract the borough Greenwich
+
+# select by attribute
+Greenwich <- Londonborough %>%
+  filter(., NAME=="Greenwich")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+```{r}
+#extract the borough Bexley
+
+# select by attribute
+Bexley <- Londonborough %>%
+  filter(., NAME=="Bexley")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Bexley) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+### high street boundary
+
+```{r}
+HighstrMap <- st_read(here::here("data", 
+                                        "Retail_Boundaries_UK", 
+                                        "Retail_Boundaries_UK.gpkg"))%>%
+  filter(., Region_NM=="London")
+#  st_transform(.,27700)
+```
+
+```{r}
+qtm(HighstrMap)
+```
+
+```{r}
+HighstrMap
+```
+
+
+```{r}
+HarrowHS <- HighstrMap[Harrow, , op = st_intersects]
+```
+
+
+```{r}
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HarrowHS) +
+  tm_polygons(col = "blue", alpha = 0.5)
+```
+
+
+```{r}
+# intersec
+HounslowHS <- HighstrMap[Hounslow, , op = st_intersects]
+```
+
+```{r}
+#overlaps
+#HounslowHS2 <- HighstrMap[Hounslow, , op = st_overlaps]
+```
+
+```{r}
+# within
+#HounslowHS <- HighstrMap[Hounslow, , op = st_within]%>%
+#  st_union(,HounslowHS2)
+```
+
+
+```{r}
+tm_shape(Hounslow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HounslowHS) +
+  tm_polygons(col = "blue", alpha = 0.5)
+```
+
+
+
+```{r}
+GreenwichHS <- HighstrMap[Greenwich, , op = st_intersects]
+```
+
+
+```{r}
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(GreenwichHS) +
+  tm_polygons(col = "blue", alpha = 0.5)
+```

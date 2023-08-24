@@ -1,0 +1,271 @@
+
+```{r}
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+library(dplyr)
+library(tidyr)
+```
+
+## Harrow
+
+```{r}
+HarrowUnitjoin <- st_read(here::here("data", "unit_join", "HarrowUnitJoin.shp"))%>%
+  dplyr::select(uarn,status, rentalValu,period,ratesPaid,statusDura,RC_ID,floorArea)%>%
+#  na.omit()%>%
+  filter(ratesPaid!="0")
+```
+
+```{r}
+HarrowUnitjoin <- HarrowUnitjoin%>%
+  mutate(year = substr(period,1,4))
+```
+
+status: True = occupied = 1
+```{r}
+Harrowyear <- HarrowUnitjoin%>%
+  group_by(year)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+```{r}
+HarrowDuration <- HarrowUnitjoin%>%
+  group_by(year,status)%>%
+  summarise(vacanDura = median(statusDura))
+```
+
+
+```{r}
+HarrowHSyear <- HarrowUnitjoin%>%
+  group_by(RC_ID, year)%>%
+  summarise(vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+
+```{r}
+Harrowyeartype <- HarrowUnitjoin%>%
+  group_by(year, category)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+```{r}
+HarrowHSyear2 <- st_collection_extract(HarrowHSyear, "POINT")
+```
+
+
+```{r}
+write_sf(Harrowyear, "D:/CASA/FSDS/foundations/Dissertation/data/trans/Harrowyear.shp")
+
+write_sf(HarrowHSyear2, "D:/CASA/FSDS/foundations/Dissertation/data/trans/HarrowHSyear.shp")
+
+write_sf(Harrowyeartype, "D:/CASA/FSDS/foundations/Dissertation/data/trans/Harrowyeartype.shp")
+
+write_sf(HarrowDuration, "D:/CASA/FSDS/foundations/Dissertation/data/trans/HarrowDuration.shp")
+
+```
+
+## Hounslow
+
+```{r}
+HounslowUnitjoin <- st_read(here::here("data", "unit_join", "HounslowUnitJoin.shp"))%>%
+  dplyr::select(uarn,status, rentalValu,period,ratesPaid,statusDura,RC_ID,floorArea)%>%
+#  na.omit()%>%
+  filter(ratesPaid!="0")
+```
+
+```{r}
+HounslowUnitjoin <- HounslowUnitjoin%>%
+  mutate(year = substr(period,1,4))
+```
+
+status: True = occupied = 1
+```{r}
+Hounslowyear <- HounslowUnitjoin%>%
+  group_by(year)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+```{r}
+Hounslowyeartype <- HounslowUnitjoin%>%
+  group_by(year, category)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+
+```{r}
+HounslowHSyear <- HounslowUnitjoin%>%
+  group_by(RC_ID, year)%>%
+  summarise(
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+```{r}
+HounslowHSyear2 <- st_collection_extract(HounslowHSyear, "POINT")
+```
+
+
+```{r}
+HounslowDuration <- HounslowUnitjoin%>%
+  group_by(year,status)%>%
+  summarise(vacanDura = median(statusDura))
+```
+
+```{r}
+write_sf(Hounslowyear, "D:/CASA/FSDS/foundations/Dissertation/data/Hounslowyear.shp")
+
+write_sf(HounslowHSyear2, "D:/CASA/FSDS/foundations/Dissertation/data/trans/HounslowHSyear.shp")
+
+write_sf(Hounslowyeartype, "D:/CASA/FSDS/foundations/Dissertation/data/Hounslowyeartype.shp")
+
+write_sf(HounslowDuration, "D:/CASA/FSDS/foundations/Dissertation/data/HounslowDuration.shp")
+```
+
+## Greenwich
+
+
+
+```{r}
+GreenwichUnitjoin <- st_read(here::here("data", "unit_join", "GreenwichUnitJoin.shp"))%>%
+  dplyr::select(uarn,status, rentalValu,period,ratesPaid,statusDura,RC_ID,floorArea)%>%
+#  na.omit()%>%
+  filter(ratesPaid!="0")
+```
+
+```{r}
+GreenwichUnitjoin <- GreenwichUnitjoin%>%
+  mutate(year = substr(period,1,4))
+```
+
+status: True = occupied = 1
+```{r}
+Greenwichyear <- GreenwichUnitjoin%>%
+  group_by(year)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+```{r}
+Greenwichyeartype <- GreenwichUnitjoin%>%
+  group_by(year, category)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+
+```{r}
+GreenwichHSyear <- GreenwichUnitjoin%>%
+  group_by(RC_ID, year)%>%
+  summarise(
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+```{r}
+GreenwichHSyear2 <- st_collection_extract(GreenwichHSyear, "POINT")
+```
+
+
+```{r}
+GreenwichDuration <- GreenwichUnitjoin%>%
+  group_by(year,status)%>%
+  summarise(vacanDura = median(statusDura))
+```
+
+```{r}
+write_sf(Greenwichyear, "D:/CASA/FSDS/foundations/Dissertation/data/Greenwichyear.shp")
+
+write_sf(GreenwichHSyear2, "D:/CASA/FSDS/foundations/Dissertation/data/GreenwichHSyear.shp")
+
+write_sf(Greenwichyeartype, "D:/CASA/FSDS/foundations/Dissertation/data/Greenwichyeartype.shp")
+
+write_sf(GreenwichDuration, "D:/CASA/FSDS/foundations/Dissertation/data/GreenwichDuration.shp")
+```
+
+## Bexley
+
+
+
+```{r}
+BexleyUnitjoin <- st_read(here::here("data", "unit_join", "BexleyUnitJoin.shp"))%>%
+  dplyr::select(uarn,status, rentalValu,period,ratesPaid,statusDura,RC_ID,floorArea)%>%
+#  na.omit()%>%
+  filter(ratesPaid!="0")
+```
+
+```{r}
+BexleyUnitjoin <- BexleyUnitjoin%>%
+  mutate(year = substr(period,1,4))
+```
+
+status: True = occupied = 1
+```{r}
+Bexleyyear <- BexleyUnitjoin%>%
+  group_by(year)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+```{r}
+Bexleyyeartype <- BexleyUnitjoin%>%
+  group_by(year, category)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+
+```{r}
+BexleyHSyear <- BexleyUnitjoin%>%
+  group_by(RC_ID, year)%>%
+  summarise(
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+```{r}
+BexleyHSyear2 <- st_collection_extract(BexleyHSyear, "POINT")
+```
+
+
+```{r}
+BexleyDuration <- BexleyUnitjoin%>%
+  group_by(year,status)%>%
+  summarise(vacanDura = median(statusDura))
+```
+
+```{r}
+write_sf(Bexleyyear, "D:/CASA/FSDS/foundations/Dissertation/data/trans/Bexleyyear.shp")
+
+write_sf(BexleyHSyear2, "D:/CASA/FSDS/foundations/Dissertation/data/trans/BexleyHSyear.shp")
+
+write_sf(Bexleyyeartype, "D:/CASA/FSDS/foundations/Dissertation/data/trans/Bexleyyeartype.shp")
+
+write_sf(BexleyDuration, "D:/CASA/FSDS/foundations/Dissertation/data/trans/BexleyDuration.shp")
+```

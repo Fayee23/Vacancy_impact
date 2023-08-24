@@ -1,0 +1,88 @@
+```{r}
+library(plm)
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+library(dplyr)
+library(tidyr)
+```
+
+```{r}
+mydata <- read.csv("data/regression/HarrowHSyear2.csv")%>%
+  na.omit()
+
+mydata
+
+attach(mydata)
+Y <- cbind(jobdensity)
+
+X <- cbind(vacancy)
+
+
+```
+
+```{r}
+cor(X,Y,use = "everything",method = c("pearson"))
+```
+
+
+```{r}
+pdata <- pdata.frame(mydata, index = c("RC_ID","year"))
+```
+
+```{r}
+pool<- plm(Y~X, data=pdata,model="pooling")
+
+fix<- plm(Y~X, data=pdata,model="within")
+
+random <- plm(Y~X, data=pdata,model="random")
+```
+
+```{r}
+#random vs pool
+plmtest(pool,type = "bp")
+
+#fix vs pool
+pFtest(fix,pool)
+
+#random vs fix
+phtest(random,fix)
+
+```
+
+
+```{r}
+fix_time<- plm(Y~X, data=pdata,model="within",effect="time")
+
+fix_indi<- plm(Y~X, data=pdata,model="within", effect="individual")
+```
+
+
+```{r}
+pFtest(fix_time, fix_indi)
+```
+
+```{r}
+library(lmtest)
+
+bptest(pool)
+```
+
+```{r}
+#random vs fix
+phtest(random,fix_time)
+```
+
+
+```{r}
+summary(random)
+```
+
+```{r}
+summary(fix)
+```
+

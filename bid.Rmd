@@ -1,0 +1,220 @@
+```{r}
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+library(dplyr)
+library(tidyr)
+```
+
+
+```{r}
+bid <- st_read(here::here("data", "business_improvement_districts", "business_improvement_districts.shp"))
+```
+
+```{r}
+bidHarrow <- bid%>%
+  filter(.,borough=="Harrow")
+
+bidBexley <- bid%>%
+  filter(., borough=="Bexley")
+```
+
+```{r}
+write_sf(bidHarrow, "D:/CASA/FSDS/foundations/Dissertation/data/business_improvement_districts/bidHarrow.shp")
+
+write_sf(bidBexley, "D:/CASA/FSDS/foundations/Dissertation/data/business_improvement_districts/bidBexley.shp")
+```
+
+```{r}
+bidBexley1 <- bidBexley%>%
+  filter(.,bid_name=="Bexleyheath BID")
+
+bidBexley2 <- bidBexley%>%
+  filter(.,bid_name=="Sidcup BID")
+```
+
+
+```{r}
+#HarrowUnitSub <- harrowUnit[HarrowHS,]
+
+bidunitHarrow <- harrowUnit[bidHarrow,]%>%
+  dplyr::select(uarn,status, rentalValu,period,ratesPaid,statusDura,floorArea)%>%
+#  na.omit()%>%
+  filter(ratesPaid!="0")
+
+bidunitBexley1 <- bexleyUnit[bidBexley1,]%>%
+  dplyr::select(uarn,status, rentalValu,period,ratesPaid,statusDura,floorArea)%>%
+#  na.omit()%>%
+  filter(ratesPaid!="0")
+
+bidunitBexley2 <- bexleyUnit[bidBexley2,]%>%
+  dplyr::select(uarn,status, rentalValu,period,ratesPaid,statusDura,floorArea)%>%
+#  na.omit()%>%
+  filter(ratesPaid!="0")
+```
+
+
+```{r}
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(bidHarrow) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(bidunitHarrow) +
+  tm_dots(col = "blue")
+```
+
+
+```{r}
+bidunitHarrow <- bidunitHarrow %>%
+  mutate(levy= ifelse(ratesPaid > 30000, 0.015*ratesPaid, 0),year = substr(period,1,4))
+```
+
+```{r}
+bidunitBexley1<- bidunitBexley1 %>%
+  mutate(levy= ifelse(ratesPaid > 12000, 0.013*ratesPaid, 0),year = substr(period,1,4),bid_name="Bexleyheath BID")
+
+
+bidunitBexley2 <- bidunitBexley2%>%
+  mutate(levy= ifelse(ratesPaid > 12000, 0.013*ratesPaid, 0),year = substr(period,1,4),bid_name="Sidcup BID")
+
+  
+```
+
+```{r}
+bidunitHarrowTab <- bidunitHarrow%>%
+  group_by(year)%>%
+  summarise(vacancy = (1-mean(status))*100, 
+            levytotal = sum(levy), levymean = mean(levy), levymedian = median(levy))%>%
+  mutate(bid_name="Harrow Town Centre")
+```
+
+```{r}
+bidunitBexley1Tab <- bidunitBexley1%>%
+  group_by(year)%>%
+  summarise(vacancy = (1-mean(status))*100, 
+            levytotal = sum(levy), levymean = mean(levy), levymedian = median(levy))%>%
+  mutate(bid_name="Bexleyheath BID")
+```
+
+```{r}
+bidunitBexley2Tab <- bidunitBexley2%>%
+  group_by(year)%>%
+  summarise(vacancy = (1-mean(status))*100, 
+            levytotal = sum(levy), levymean = mean(levy), levymedian = median(levy))%>%
+  mutate(bid_name="Sidcup BID")
+```
+
+```{r}
+bidunitBexleyTab<-rbind(bidunitBexley1Tab,bidunitBexley2Tab)
+```
+
+```{r}
+write_sf(bidunitHarrowTab, "D:/CASA/FSDS/foundations/Dissertation/data/business_improvement_districts/bidunitHarrowTab.shp")
+
+write_sf(bidunitBexleyTab, "D:/CASA/FSDS/foundations/Dissertation/data/business_improvement_districts/bidunitBexleyTab.shp")
+```
+
+
+```{r}
+mydata<-read.csv("data/regression/bidunitBexleyTab.csv")
+  
+
+attach(mydata)
+Y <- cbind(levymean)
+
+X <- cbind(vacancy)
+```
+
+```{r}
+library(tseries)
+
+adf.test(Y)
+
+adf.test(X)
+```
+
+```{r}
+d_Y <-diff(Y)
+d_X <- diff(X)
+#dd_Y <- diff(d_Y)
+dd_X <-diff(d_X)
+plot(d_Y)
+adf.test(d_Y)
+adf.test(d_X)
+adf.test(dd_X)
+```
+
+
+```{r}
+library(plm)
+
+#data("Grunfeld", package = "plm")
+#y <- data.frame(split(Grunfeld$inv, Grunfeld$firm)) # individuals in columns
+
+y <- data.frame(split(mydata$levymean, mydata$bid_name)) # individuals in columns
+
+x <- data.frame(split(mydata$vacancy, mydata$bid_name))
+
+```
+
+
+```{r}
+purtest(y,test=c("hadri"),exo=c("trend"),lags=c("AIC"))
+
+purtest(x,test=c("hadri"),exo=c("trend"),lags=c("AIC"))
+
+purtest(y, pmax = 4, exo = "trend", test = "madwu")
+
+purtest(x, pmax = 4, exo = "trend", test = "madwu")
+```
+
+
+
+```{r}
+cor(X,Y,use = "everything",method = c("pearson"))
+```
+
+```{r}
+pdata <- pdata.frame(mydata, index = c("bid_name","year"))
+```
+
+```{r}
+pool<- plm(d_Y~d_X, data=pdata,model="pooling")
+
+pool1<- plm(Y~X, data=pdata,model="pooling")
+
+fix1<- plm(Y~X, data=pdata,model="within")
+
+random <- plm(d_Y~d_X, data=pdata,model="random")
+```
+
+```{r}
+#random vs pool
+plmtest(pool,type = "bp")
+
+#fix vs pool
+pFtest(fix,pool)
+
+pFtest(fix1,pool1)
+
+#random vs fix
+phtest(random,fix)
+
+```
+
+```{r}
+summary(fix)
+```
+
+```{r}
+summary(fix1)
+```
+
+```{r}
+summary(pool)
+```
+

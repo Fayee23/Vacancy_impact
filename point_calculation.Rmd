@@ -1,0 +1,61 @@
+
+```{r}
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+library(dplyr)
+library(tidyr)
+```
+
+
+
+```{r}
+BexleyUnitjoin <- st_read(here::here("data", "unit_join", "BexleyUnitJoin.shp"))
+```
+
+```{r}
+BexleyUnitjoin <- BexleyUnitjoin%>%
+  mutate(year = substr(period,1,4))
+```
+
+status: True = occupied = 1
+```{r}
+Bexleyyear <- BexleyUnitjoin%>%
+  group_by(year)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+```{r}
+Bexleyyeartype <- BexleyUnitjoin%>%
+  group_by(year, category)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+
+```{r}
+BexleyHSyear <- BexleyUnitjoin%>%
+  group_by(RC_ID, year)%>%
+  summarise(floortotal = sum(floorArea), floormean = mean(floorArea), floormedian = median(floorArea),
+            vacancy = (1-mean(status))*100, 
+            rentaltotal = sum(rentalValu), rentalmean = mean(rentalValu), rentalmedian = median(rentalValu),
+            ratestotal = sum(ratesPaid), ratesmean = mean(ratesPaid), ratesmedian = median(ratesPaid))
+```
+
+
+```{r}
+write.csv(Bexleyyear, "D:/CASA/FSDS/foundations/Dissertation/data/Bexleyyear.csv")
+
+write.csv(BexleyHSyear, "D:/CASA/FSDS/foundations/Dissertation/data/BexleyHSyear.csv")
+
+write.csv(Bexleyyeartype, "D:/CASA/FSDS/foundations/Dissertation/data/Bexleyyeartype.csv")
+```

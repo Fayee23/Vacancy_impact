@@ -1,0 +1,375 @@
+---
+title: "Data processing"
+output: html_notebook
+---
+
+```{r}
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+```
+
+## Reading data
+
+### Read london borough
+```{r}
+Londonborough <- st_read(here::here("data", 
+                                        "statistical-gis-boundaries-london", 
+                                        "ESRI",
+                                        "London_Borough_Excluding_MHW.shp"))%>%
+  st_transform(.,27700)
+```
+
+```{r}
+#have a look on the map
+qtm(Londonborough)
+```
+
+
+```{r}
+#extract the borough Harrow
+
+# select by attribute
+Harrow <- Londonborough %>%
+  filter(., NAME=="Harrow")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+```{r}
+#extract the borough Hounslow
+
+# select by attribute
+Hounslow <- Londonborough %>%
+  filter(., NAME=="Hounslow")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Hounslow) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+```{r}
+#extract the borough Greenwich
+
+# select by attribute
+Greenwich <- Londonborough %>%
+  filter(., NAME=="Greenwich")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+```{r}
+#extract the borough Bexley
+
+# select by attribute
+Bexley <- Londonborough %>%
+  filter(., NAME=="Bexley")
+
+#Check to see that the correct borough has been pulled out
+tm_shape(Bexley) +
+  tm_polygons(col = NA, alpha = 0.5)
+```
+
+### high street boundary
+
+```{r}
+HighstrMap <- st_read(here::here("data", 
+                                        "Retail_Boundaries_UK", 
+                                        "Retail_Boundaries_UK.gpkg"))%>%
+  filter(., Region_NM=="London")%>%
+  st_transform(.,27700)
+```
+
+```{r}
+qtm(HighstrMap)
+```
+
+```{r}
+HighstrMap
+```
+
+
+```{r}
+HarrowHS <- HighstrMap[Harrow, , op = st_within]
+```
+
+
+```{r}
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HarrowHS) +
+  tm_polygons(col = "blue", alpha = 0.5)
+```
+
+
+```{r}
+
+HounslowHS <- HighstrMap[Hounslow, , op = st_within]
+```
+
+```{r}
+#overlaps
+#HounslowHS2 <- HighstrMap[Hounslow, , op = st_overlaps]
+```
+
+```{r}
+# within
+#HounslowHS <- HighstrMap[Hounslow, , op = st_within]%>%
+#  st_union(,HounslowHS2)
+```
+
+
+```{r}
+tm_shape(Hounslow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HounslowHS) +
+  tm_polygons(col = "blue", alpha = 0.5)
+```
+
+
+
+```{r}
+GreenwichHS <- HighstrMap[Greenwich, , op = st_within]
+```
+
+
+```{r}
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(GreenwichHS) +
+  tm_polygons(col = "blue", alpha = 0.5)
+```
+
+
+
+```{r}
+BexleyHS <- HighstrMap[Bexley, , op = st_within]
+```
+
+
+```{r}
+tm_shape(Bexley) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(BexleyHS) +
+  tm_polygons(col = "blue", alpha = 0.5)
+```
+
+save data
+
+```{r}
+st_write(Harrow, "D:/CASA/FSDS/foundations/Dissertation/data/borough/harrow.shp")
+```
+
+```{r}
+st_write(Hounslow, "D:/CASA/FSDS/foundations/Dissertation/data/borough/hounslow.shp")
+```
+
+```{r}
+st_write(Greenwich, "D:/CASA/FSDS/foundations/Dissertation/data/borough/greenwich.shp")
+```
+
+```{r}
+st_write(Bexley, "D:/CASA/FSDS/foundations/Dissertation/data/borough/bexley.shp")
+```
+
+```{r}
+st_write(HarrowHS, "D:/CASA/FSDS/foundations/Dissertation/data/highstreet_within/harrowHS.shp")
+```
+
+```{r}
+st_write(HounslowHS, "D:/CASA/FSDS/foundations/Dissertation/data/highstreet_within/hounslowHS.shp")
+```
+
+```{r}
+st_write(GreenwichHS, "D:/CASA/FSDS/foundations/Dissertation/data/highstreet_within/greenwichHS.shp")
+```
+
+```{r}
+st_write(BexleyHS, "D:/CASA/FSDS/foundations/Dissertation/data/highstreet_within/bexleyHS.shp")
+```
+
+```{r}
+HarrowHS
+```
+
+
+### Individual units
+```{r}
+harrowUnit <- st_read(here::here("data", "unitpoint", "harrowUnit.shp"))%>%
+  st_set_crs(4326)
+
+harrowUnit
+
+```
+
+```{r}
+harrowUnit <- harrowUnit%>%
+  st_transform(.,27700)
+
+harrowUnit
+```
+
+
+```{r}
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(harrowUnit) +
+  tm_dots(col = "blue")
+```
+
+
+
+```{r}
+HarrowUnitSub <- harrowUnit[HarrowHS,]# subsetting
+```
+
+
+```{r}
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HarrowHS) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HarrowUnitSub) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+st_write(harrowUnit, "D:/CASA/FSDS/foundations/Dissertation/data/unit_crs/HarrowUnit.shp")
+```
+
+
+```{r}
+st_write(HarrowUnitSub, "D:/CASA/FSDS/foundations/Dissertation/data/unit_sub/HarrowUnitSub.shp")
+```
+
+
+```{r}
+hounslowUnit <- st_read(here::here("data", "unitpoint", "hounslowUnit.shp"))%>%
+  st_set_crs(4326)%>%
+  st_transform(.,27700)
+
+hounslowUnit
+```
+
+```{r}
+HounslowHS <- st_read(here::here("data", "highstreet_within", "hounslowHS.shp"))
+```
+
+```{r}
+Hounslow <- st_read(here::here("data", "borough", "hounslow.shp"))
+```
+
+
+```{r}
+HounslowUnitSub <- hounslowUnit[HounslowHS,]# subsetting
+```
+
+```{r}
+tm_shape(Hounslow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HounslowHS) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(hounslowUnit) +
+  tm_dots(col = "blue")
+```
+
+
+
+```{r}
+tm_shape(HounslowHS) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HounslowUnitSub) +
+  tm_dots(col = "blue")
+```
+
+
+```{r}
+greenwichUnit <- st_read(here::here("data", "unitpoint", "greenwichUnit.shp"))%>%
+  st_set_crs(4326)%>%
+  st_transform(.,27700)
+
+greenwichUnit
+```
+
+```{r}
+GreenwichHS <- st_read(here::here("data", "highstreet_within", "hounslowHS.shp"))%>%
+  st_transform(.,27700)
+```
+
+```{r}
+greenwichUnit <- greenwichUnit%>%
+  st_transform(.,27700)
+```
+
+
+```{r}
+GreenwichUnitSub <- greenwichUnit[GreenwichHS,]# subsetting
+```
+
+```{r}
+
+tm_shape(GreenwichHS) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(greenwichUnit) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+Greenwich <- st_read(here::here("data", "borough", "greenwich.shp"))
+```
+
+```{r}
+
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(GreenwichHS) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(GreenwichUnitSub) +
+  tm_dots(col = "blue")
+```
+```{r}
+write_sf(GreenwichHS, "D:/CASA/FSDS/foundations/Dissertation/data/highstreet_within/greenwichHS.shp")
+```
+
+```{r}
+bexleyUnit <-st_read(here::here("data","unitpoint","bexleyUnit.shp"))%>%
+  st_set_crs(4326)%>%
+  st_transform(.,27700)
+
+bexleyUnit
+```
+
+```{r}
+BexleyHS <- st_read(here::here("data","highstreet_within","bexleyHS.shp"))
+```
+
+```{r}
+BexleyUnitSub <- bexleyUnit[BexleyHS,]# subsetting
+```
+
+```{r}
+
+#tm_shape(Greenwich) +
+#  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(BexleyHS) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(BexleyUnitSub) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+write_sf(HounslowUnitSub,"D:/CASA/FSDS/foundations/Dissertation/data/unit_sub/HounslowUnitSub.shp")
+
+write_sf(GreenwichUnitSub,"D:/CASA/FSDS/foundations/Dissertation/data/unit_sub/GreenwichUnitSub.shp")
+
+write_sf(BexleyUnitSub,"D:/CASA/FSDS/foundations/Dissertation/data/unit_sub/BexleyUnitSub.shp")
+```
+

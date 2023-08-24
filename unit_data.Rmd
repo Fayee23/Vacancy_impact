@@ -1,0 +1,92 @@
+```{r}
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+library(dplyr)
+library(tidyr)
+```
+
+## Greenwich
+
+```{r}
+GreenwichUnitSub <- st_read(here::here("data", "unit_sub", "GreenwichUnitSub.shp"))
+```
+
+```{r}
+
+```
+
+
+
+filter points for each year
+```{r}
+GreenwichUnitSub2010 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2010"))
+```
+
+```{r}
+GreenwichUnitSub2011 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2011"))
+```
+
+```{r}
+GreenwichUnitSub2012 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2012"))
+
+GreenwichUnitSub2013 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2013"))
+
+GreenwichUnitSub2014 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2014"))
+
+GreenwichUnitSub2015 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2015"))
+
+GreenwichUnitSub2016 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2016"))
+
+GreenwichUnitSub2017 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2017"))
+
+GreenwichUnitSub2018 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2018"))
+
+GreenwichUnitSub2019 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2019"))
+
+GreenwichUnitSub2020 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2020"))
+
+GreenwichUnitSub2021 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2021"))
+
+GreenwichUnitSub2022 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2022"))
+
+GreenwichUnitSub2023 <- GreenwichUnitSub%>%
+  clean_names()%>%
+  filter(str_detect(period, "2023"))
+```
+
+# save data
+
+
+
+

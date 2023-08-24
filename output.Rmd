@@ -1,0 +1,341 @@
+```{r}
+library(here)
+library(janitor)
+library(sf)
+library(tidyverse)
+library(readr)
+library(tmap)
+library(sf)
+library(dplyr)
+library(tidyr)
+```
+
+```{r}
+Harrow <- st_read(here::here("data","borough","harrow.shp"))
+```
+
+
+```{r}
+Hounslow <- st_read(here::here("data","borough","hounslow.shp"))
+Greenwich <- st_read(here::here("data","borough","greenwich.shp"))
+Bexley <- st_read(here::here("data","borough","bexley.shp"))
+```
+
+```{r}
+hounslowUnit <-st_read(here::here("data","unit_joinward","HounslowUnit_ward.shp"))
+
+harrowUnit <-st_read(here::here("data","unit_joinward","HarrowUnit_ward.shp"))
+
+bexleyUnit <-st_read(here::here("data","unit_joinward","BexleyUnit_ward.shp"))
+
+greenwichUnit <-st_read(here::here("data","unit_joinward","GreenwichUnit_ward.shp"))
+
+```
+
+```{r}
+HarrowHS <- st_read(here::here("data","highstreet_within","harrowHS.shp"))%>%
+  st_transform(.,27700)
+
+HounslowHS <- st_read(here::here("data","highstreet_within","hounslowHS.shp"))%>%
+  st_transform(.,27700)
+
+GreenwichHS <- st_read(here::here("data","highstreet_within","greenwichHS.shp"))%>%
+  st_transform(.,27700)
+
+BexleyHS <- st_read(here::here("data","highstreet_within","bexleyHS.shp"))%>%
+  st_transform(.,27700)
+```
+
+```{r}
+# unit after subsetting
+
+HarrowUnitjoin <-st_read(here::here("data","unit_join","HarrowUnitjoin.shp"))
+
+HounslowUnitjoin <-st_read(here::here("data","unit_join","HounslowUnitjoin.shp"))
+
+BexleyUnitjoin <-st_read(here::here("data","unit_join","BexleyUnitjoin.shp"))
+
+GreenwichUnitjoin <-st_read(here::here("data","unit_join","GreenwichUnitjoin.shp"))
+```
+
+
+```{r}
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(GreenwichHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(greenwichUnit) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+tm_shape(Greenwich) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(GreenwichHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(GreenwichUnitjoin) +
+  tm_dots(col = "blue")
+```
+
+
+```{r}
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HarrowHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(harrowUnit) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+tm_shape(Harrow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HarrowHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(HarrowUnitjoin) +
+  tm_dots(col = "blue")
+```
+
+
+
+```{r}
+tm_shape(Hounslow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HounslowHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(hounslowUnit) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+tm_shape(Hounslow) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(HounslowHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(HounslowUnitjoin) +
+  tm_dots(col = "blue")
+```
+
+
+
+```{r}
+tm_shape(Bexley) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(BexleyHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(bexleyUnit) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+tm_shape(Bexley) +
+  tm_polygons(col = NA, alpha = 0.5) +
+tm_shape(BexleyHS) +
+  tm_polygons(col = "red", alpha = 0.5) +
+tm_shape(BexleyUnitjoin) +
+  tm_dots(col = "blue")
+```
+
+```{r}
+###add a basemap
+##First get the bbox in lat long for Harrow
+HarrowWGSbb <- Harrow %>%
+  st_transform(., 4326)%>%
+  st_bbox()
+```
+
+```{r}
+bexleyUnit2 <- bexleyUnit%>%
+  mutate(year = substr(period,1,4))%>%
+  filter(., status =="1")
+
+Bexleyfloorarea <- bexleyUnit2%>%
+  group_by(GSS_CODE, year)%>%
+  summarise(floortotal = sum(floorArea))
+```
+
+```{r}
+# harrow
+harrowUnit2 <- harrowUnit%>%
+  mutate(year = substr(period,1,4))%>%
+  filter(., status =="1")
+
+harrowfloorarea <- harrowUnit2%>%
+  group_by(GSS_CODE, year)%>%
+  summarise(floortotal = sum(floorArea))
+
+#hounslow
+hounslowUnit2 <- hounslowUnit%>%
+  mutate(year = substr(period,1,4))%>%
+  filter(., status =="1")
+
+hounslowfloorarea <- hounslowUnit2%>%
+  group_by(GSS_CODE, year)%>%
+  summarise(floortotal = sum(floorArea))
+
+#greenwich
+greenwichUnit2 <- greenwichUnit%>%
+  mutate(year = substr(period,1,4))%>%
+  filter(., status =="1")
+
+greenwichfloorarea <- greenwichUnit2%>%
+  group_by(GSS_CODE, year)%>%
+  summarise(floortotal = sum(floorArea))
+```
+
+
+```{r}
+write_sf(greenwichfloorarea,"D:/CASA/FSDS/foundations/Dissertation/data/floorarea/greenwichfloorarea.shp")
+
+write_sf(hounslowfloorarea,"D:/CASA/FSDS/foundations/Dissertation/data/floorarea/hounslowfloorarea.shp")
+
+write_sf(harrowfloorarea,"D:/CASA/FSDS/foundations/Dissertation/data/floorarea/harrowfloorarea.shp")
+
+write_sf(Bexleyfloorarea,"D:/CASA/FSDS/foundations/Dissertation/data/floorarea/bexleyfloorarea.shp")
+```
+
+
+# KDE
+
+```{r}
+library(spatstat)
+library(here)
+library(sp)
+library(rgeos)
+library(maptools)
+library(tmap)
+library(sf)
+library(geojson)
+library(geojsonio)
+library(tmaptools)
+```
+
+
+```{r}
+#now set a window as the borough boundary
+window <- as.owin(BexleyHS)
+plot(window)
+```
+
+
+```{r}
+BexleyKDE <- BexleyUnitjoin%>%
+  filter(., status=="0")
+```
+
+
+```{r}
+#create a sp object
+BexleyKDE<- BexleyKDE %>%
+  as(., 'Spatial')
+#create a ppp object
+Bexley.ppp <- ppp(x=BexleyKDE@coords[,1],
+                          y=BexleyKDE@coords[,2],
+                          window=window)
+```
+
+```{r}
+Bexley_KDE<-Bexley.ppp %>%
+  density(., sigma=50)%>%a
+  plot()
+```
+
+```{r}
+tm_shape(Bexley) +
+  tm_polygons(col = NA, alpha = 0.5)+
+plot(Bexley_KDE)
+```
+
+
+```{r}
+#now set a window as the borough boundary
+window <- as.owin(HarrowHS)
+plot(window)
+```
+
+
+```{r}
+HarrowKDE <- HarrowUnitjoin%>%
+  filter(., status=="0")
+```
+
+
+```{r}
+#create a sp object
+HarrowKDE<- HarrowKDE %>%
+  as(., 'Spatial')
+#create a ppp object
+HarrowKDE.ppp <- ppp(x=HarrowKDE@coords[,1],
+                          y=HarrowKDE@coords[,2],
+                          window=window)
+```
+
+```{r}
+Harrow_KDE<-HarrowKDE.ppp %>%
+  density(., sigma=50)%>%
+  plot()
+```
+
+
+
+
+```{r}
+#now set a window as the borough boundary
+window <- as.owin(HounslowHS)
+plot(window)
+```
+
+
+```{r}
+HounslowKDE <- HounslowUnitjoin%>%
+  filter(., status=="0")
+```
+
+
+```{r}
+#create a sp object
+HounslowKDE<- HounslowKDE %>%
+  as(., 'Spatial')
+#create a ppp object
+HounslowKDE.ppp <- ppp(x=HounslowKDE@coords[,1],
+                          y=HounslowKDE@coords[,2],
+                          window=window)
+```
+
+```{r}
+Hounslow_KDE<-HounslowKDE.ppp %>%
+  density(., sigma=50)%>%
+  plot()
+```
+
+
+
+
+```{r}
+#now set a window as the borough boundary
+window <- as.owin(GreenwichHS)
+plot(window)
+```
+
+
+```{r}
+GreenwichKDE <- GreenwichUnitjoin%>%
+  filter(., status=="0")
+```
+
+
+```{r}
+#create a sp object
+GreenwichKDE<- GreenwichKDE %>%
+  as(., 'Spatial')
+#create a ppp object
+GreenwichKDE.ppp <- ppp(x=GreenwichKDE@coords[,1],
+                          y=GreenwichKDE@coords[,2],
+                          window=window)
+```
+
+```{r}
+Greenwich_KDE<-GreenwichKDE.ppp %>%
+  density(., sigma=50)%>%
+  plot()
+```
